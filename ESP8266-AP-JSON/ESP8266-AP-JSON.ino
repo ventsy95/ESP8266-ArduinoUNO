@@ -5,9 +5,10 @@
 #include <ESP8266WebServer.h> 
 /* Set these to your desired credentials. */
 const char *ssid = "ESP8266";
-const char *password = "oroudvoro";
+const char *password = "p";
 String command;
 ESP8266WebServer server(80);
+WiFiClient client = server.client();
 
 /* Just a little test message.  Go to http://192.168.4.1 in a web browser
  * connected to this access point to see it.
@@ -95,8 +96,21 @@ void duck() {
   Serial.println(command);
 }
 
+void goToStart() {   
+   //This is a JSON formatted string that will be served. You can change the values to whatever like.
+   // {"data":[{"dataValue":"1024"},{"dataValue":"23"}]} This is essentially what is will output you can add more if you like
+  command = "6";
+  String text2 = "{\"data\":[";
+  text2 += "{\"dataValue\":\"";
+  text2 += command;
+  text2 += "\"}";
+  text2 += "]}";
+  server.send(200, "text/html", text2);
+  Serial.println(command);
+}
+
 void setup() {
-  delay(1000);
+  delay(500);
   Serial.begin(115200);
   Serial.println();
   Serial.print("Configuring access point...");
@@ -113,11 +127,19 @@ void setup() {
   server.on("/back", moveBack);
   server.on("/duck", duck);
   server.on("/wave", wave);
+  server.on("/goToStart", goToStart);
   server.begin();
   Serial.println("HTTP server started");
 }
 
 void loop() {
   server.handleClient();
-  delay(1);
+  if(!client){
+    //delay(500);
+    Serial.println("NO CLIENT");
+    goToStart();
+  }else{
+    Serial.println("CLIENT CONNECTED");
+  }
+  //delay(1);
 }
