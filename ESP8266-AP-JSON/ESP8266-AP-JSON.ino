@@ -96,6 +96,32 @@ void duck() {
   Serial.println(command);
 }
 
+void ledOn() {   
+   //This is a JSON formatted string that will be served. You can change the values to whatever like.
+   // {"data":[{"dataValue":"1024"},{"dataValue":"23"}]} This is essentially what is will output you can add more if you like
+  command = "LEDON";
+  String text2 = "{\"data\":[";
+  text2 += "{\"dataValue\":\"";
+  text2 += command;
+  text2 += "\"}";
+  text2 += "]}";
+  server.send(200, "text/html", text2);
+  Serial.println(command);
+}
+
+void ledOff() {   
+   //This is a JSON formatted string that will be served. You can change the values to whatever like.
+   // {"data":[{"dataValue":"1024"},{"dataValue":"23"}]} This is essentially what is will output you can add more if you like
+  command = "LEDOFF";
+  String text2 = "{\"data\":[";
+  text2 += "{\"dataValue\":\"";
+  text2 += command;
+  text2 += "\"}";
+  text2 += "]}";
+  server.send(200, "text/html", text2);
+  Serial.println(command);
+}
+
 void goToStart() {   
    //This is a JSON formatted string that will be served. You can change the values to whatever like.
    // {"data":[{"dataValue":"1024"},{"dataValue":"23"}]} This is essentially what is will output you can add more if you like
@@ -127,6 +153,8 @@ void setup() {
   server.on("/back", moveBack);
   server.on("/duck", duck);
   server.on("/wave", wave);
+  server.on("/ledOn", ledOn);
+  server.on("/ledOff", ledOff);
   server.on("/goToStart", goToStart);
   server.begin();
   Serial.println("HTTP server started");
